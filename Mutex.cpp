@@ -17,12 +17,6 @@ typedef struct msg_block_tag { /* Message block */
 	DWORD	checksum; /* Message contents checksum		*/
 	DWORD	data[DATA_SIZE]; /* Message Contents		*/
 } MSG_BLOCK;
-/*	One of the following conditions holds for the message block 	*/
-/*	  1)	!f_ready || f_stop										*/
-/*			 nothing is assured about the data		OR				*/
-/*	  2)	f_ready && data is valid								*/
-/*			 && checksum and timestamp are valid					*/
-/*  Also, at all times, 0 <= nLost + nCons <= sequence				*/
 
 /* Single message block, ready to fill with a new message 	*/
 MSG_BLOCK mblock = { 0, 0, 0, 0, 0 };
@@ -83,7 +77,7 @@ int main()
 unsigned __stdcall produce(void* arg)
 /* Producer thread - Create new messages at random intervals */
 {
-	srand((DWORD)time(NULL)); /* Seed the random # generator 	*/
+	srand((DWORD)time(NULL)); /* Seed the random # generator */
 	while (!mblock.f_stop) {
 		/* Random Delay */
 		Sleep(rand() / 100);
@@ -106,7 +100,7 @@ unsigned __stdcall produce(void* arg)
 unsigned __stdcall produce1(void* arg)
 /* Producer thread - Create new messages at random intervals */
 {
-	srand((DWORD)time(NULL)); /* Seed the random # generator 	*/
+	srand((DWORD)time(NULL)); /* Seed the random # generator */
 	while (!mblock.f_stop) {
 		/* Random Delay */
 		Sleep(rand() / 100);
@@ -122,14 +116,14 @@ unsigned __stdcall produce1(void* arg)
 				mblock.sequence++;
 			}
 		}
-		__finally { /*ReleaseMutex(mblock.mguard);*/ }
+		__finally { ReleaseMutex(mblock.mguard); }
 	}
 	return 0;
 }
 unsigned __stdcall produce2(void* arg)
 /* Producer thread - Create new messages at random intervals */
 {
-	srand((DWORD)time(NULL)); /* Seed the random # generator 	*/
+	srand((DWORD)time(NULL)); /* Seed the random # generator */
 	while (!mblock.f_stop) {
 		/* Random Delay */
 		Sleep(rand() / 100);
