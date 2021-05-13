@@ -10,19 +10,19 @@ using namespace std;
 typedef struct msg_block_tag { /* Message block */
 	volatile DWORD		f_ready, f_stop;
 	/* ready state flag, stop flag	*/
-	volatile DWORD sequence; /* Message block sequence number	*/
+	volatile DWORD sequence; /* Message block sequence number */
 	volatile DWORD nCons, nLost;
 	//time_t timestamp;
-	CRITICAL_SECTION mguard;	/* Guard the message block structure	*/
+	CRITICAL_SECTION mguard;	/* Guard the message block structure */
 	DWORD	checksum; /* Message contents checksum		*/
 	DWORD	data[DATA_SIZE]; /* Message Contents		*/
 } MSG_BLOCK;
 /*	One of the following conditions holds for the message block 	*/
-/*	  1)	!f_ready || f_stop										*/
-/*			 nothing is assured about the data		OR				*/
-/*	  2)	f_ready && data is valid								*/
-/*			 && checksum and timestamp are valid					*/
-/*  Also, at all times, 0 <= nLost + nCons <= sequence				*/
+/*	  1)	!f_ready || f_stop				*/
+/*		nothing is assured about the data OR		*/
+/*	  2)	f_ready && data is valid			*/
+/*			 && checksum and timestamp are valid	*/
+/*  Also, at all times, 0 <= nLost + nCons <= sequence		*/
 
 /* Single message block, ready to fill with a new message 	*/
 MSG_BLOCK mblock = { 0, 0, 0, 0, 0 };
